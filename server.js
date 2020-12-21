@@ -14,38 +14,20 @@ const upload = multer({
 app.post('/upload', function (req, res, next) {
   upload(req, res, function (err) {
     if (err instanceof multer.MulterError) {
-      res.status(400).send('File exceeds 3Mo limit');
+      res.status(400).send('File exceeds size limit');
     } else if (err) {
-      res.status(400).send('An error occured during upload');
+      res.status(400).send('Error during upload');
     }
 
     req.files.forEach((file) => {
       fs.rename(file.path, 'public/files/' + file.originalname, (err) => {
         if (err) console.log(err);
-        console.log('File successfully moved');
+        console.log('Ok file moved');
       });
     });
     res.status(200).send('Files sent');
   });
 });
-
-// app.post('/upload', (req, res) => {
-//   upload(req, res, (err) => {
-//     if (err instanceof multer.MulterError) {
-//       res.status(400).send('File exceeds 3Mo limit');
-//     } else if (err) {
-//       res.status(400).send('An error occured during upload');
-//     } else {
-//       req.files.forEach((file) => {
-//         fs.rename(file.path, 'public/files/' + file.originalname, (err) => {
-//           if (err) console.log(err);
-//           console.log('File successfully moved');
-//         });
-//       });
-//       res.status(200).send('Files sent');
-//     }
-//   });
-// });
 
 app.listen(PORT, () => {
   console.log(`Server listening port ${PORT}`);
